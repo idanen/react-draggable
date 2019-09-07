@@ -75,6 +75,20 @@ describe('draggable', () => {
         );
       });
 
+      it("should change target's style when dragging (touches)", () => {
+        const { getByTestId, drag } = utils;
+
+        drag({
+          start: { clientX: 3, clientY: 3 },
+          delta: { x: 10, y: 15 },
+          touch: true
+        });
+
+        expect(getByTestId('main').style.transform).to.equal(
+          `translate(10px, 15px)`
+        );
+      });
+
       it('should set proper cursor', () => {
         expect(utils.getByText(/handle/i).style.cursor).to.equal('grab');
       });
@@ -123,17 +137,38 @@ describe('draggable', () => {
 
     function drag({
       start = { clientX: 0, clientY: 0 },
-      delta = { x: 0, y: 0 }
+      delta = { x: 0, y: 0 },
+      touch = false
     } = {}) {
-      fireEvent.mouseDown(getters.getByText(/handle/), start);
-      fireEvent.mouseMove(getters.getByText(/handle/), {
-        clientX: start.clientX + delta.x,
-        clientY: start.clientY + delta.y
-      });
-      fireEvent.mouseUp(getters.getByText(/handle/), {
-        clientX: start.clientX + delta.x,
-        clientY: start.clientY + delta.y
-      });
+      if (touch) {
+        fireEvent.touchStart(getters.getByText(/handle/), { touches: [start] });
+        fireEvent.touchMove(getters.getByText(/handle/), {
+          touches: [
+            {
+              clientX: start.clientX + delta.x,
+              clientY: start.clientY + delta.y
+            }
+          ]
+        });
+        fireEvent.touchEnd(getters.getByText(/handle/), {
+          changedTouches: [
+            {
+              clientX: start.clientX + delta.x,
+              clientY: start.clientY + delta.y
+            }
+          ]
+        });
+      } else {
+        fireEvent.mouseDown(getters.getByText(/handle/), start);
+        fireEvent.mouseMove(getters.getByText(/handle/), {
+          clientX: start.clientX + delta.x,
+          clientY: start.clientY + delta.y
+        });
+        fireEvent.mouseUp(getters.getByText(/handle/), {
+          clientX: start.clientX + delta.x,
+          clientY: start.clientY + delta.y
+        });
+      }
     }
 
     return {

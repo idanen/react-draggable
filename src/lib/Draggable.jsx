@@ -33,7 +33,8 @@ export function useDraggable({ controlStyle } = {}) {
 
     function startDragging(event) {
       setDragging(true);
-      const { clientX, clientY } = event;
+      const source = (event.touches && event.touches[0]) || event;
+      const { clientX, clientY } = source;
       initial.current = { x: clientX, y: clientY };
     }
   }, [controlStyle]);
@@ -72,7 +73,11 @@ export function useDraggable({ controlStyle } = {}) {
     }
 
     function reposition(event, finished) {
-      const { clientX, clientY } = event;
+      const source =
+        (event.changedTouches && event.changedTouches[0]) ||
+        (event.touches && event.touches[0]) ||
+        event;
+      const { clientX, clientY } = source;
       const calculatedX = clientX - initial.current.x;
       const calculatedY = clientY - initial.current.y;
       const newDelta = { x: calculatedX + prev.x, y: calculatedY + prev.y };
