@@ -7,7 +7,7 @@ A custom hook to make elements draggable.
 Simplest usage:
 
 ```
-import {} from 'react-draggable';
+import { useDraggable } from 'react-draggable';
 
 function MyComponent(props) {
   const { targetRef } = useDraggable({ controlStyle });
