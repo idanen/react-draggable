@@ -14,7 +14,7 @@ function App() {
         alignItems: 'flex-end',
         width: 640,
         height: 320,
-        margin: '15px auto',
+        margin: '18px auto',
         backgroundColor: 'hotpink'
       }}
       ref={targetRef}
