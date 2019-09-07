@@ -106,7 +106,7 @@ describe('draggable', () => {
             className='container'
             ref={targetRef}
             data-testid='main'
-            style={{ position: 'fixed', top: '10px', left: '10px' }}
+            style={{ position: 'fixed', top: '11px', left: '11px' }}
             {...getTargetProps()}
           >
             {dragging && <span>Dragging to:</span>}
