@@ -1,11 +1,15 @@
 {
   "name": "react-draggable",
-  "version": "0.1.0",
+  "version": "0.0.0-development",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/idanen/react-draggable.git"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build-examples": "react-scripts build",
