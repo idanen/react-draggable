@@ -66,7 +66,7 @@ export function useDraggable({ controlStyle } = {}) {
     };
 
     function stopDragging(event) {
-      setDragging(null);
+      setDragging(false);
       reposition(event, true);
     }
 
@@ -93,7 +93,7 @@ export function useDraggable({ controlStyle } = {}) {
   }, [delta, controlStyle]);
 
   const getTargetProps = () => ({
-    'aria-grabbed': dragging
+    'aria-grabbed': dragging || null
   });
 
   return { targetRef, handleRef, getTargetProps, dragging, delta };
