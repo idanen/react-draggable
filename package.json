@@ -28,6 +28,7 @@
     "@babel/preset-react": "^7.0.0",
     "@semantic-release/changelog": "^3.0.4",
     "@semantic-release/git": "^7.0.16",
+    "@semantic-release/github": "^5.4.3",
     "@testing-library/react": "^9.1.4",
     "chai": "^4.2.0",
     "commitizen": "^4.0.3",
@@ -57,7 +58,18 @@
       "@semantic-release/release-notes-generator",
       "@semantic-release/changelog",
       "@semantic-release/git",
-      "@semantic-release/npm"
+      "@semantic-release/npm",
+      [
+        "@semantic-release/github",
+        {
+          "assets": [
+            {
+              "path": "dist/index.js",
+              "label": "JS distribution"
+            }
+          ]
+        }
+      ]
     ]
   },
   "config": {
