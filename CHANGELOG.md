@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/idanen/react-draggable/compare/v1.1.1...v1.1.2) (2019-09-08)
+
+
+### Bug Fixes
+
+* **Draggable:** Fix imports ([2852514](https://github.com/idanen/react-draggable/commit/2852514))
+
 ## [1.1.1](https://github.com/idanen/react-draggable/compare/v1.1.0...v1.1.1) (2019-09-07)
 
 
