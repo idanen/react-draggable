@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/idanen/react-draggable/compare/v1.1.2...v1.1.3) (2019-09-08)
+
+
+### Bug Fixes
+
+* **build:** Build commonJS ([b02e0b6](https://github.com/idanen/react-draggable/commit/b02e0b6))
+
 ## [1.1.2](https://github.com/idanen/react-draggable/compare/v1.1.1...v1.1.2) (2019-09-08)
 
 
