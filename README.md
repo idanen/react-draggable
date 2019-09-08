@@ -46,3 +46,7 @@ class MyComponent extends React.Component {
   }
 }
 ```
+
+## Live demo
+
+https://codesandbox.io/s/use-draggable-demo-tiu3w
