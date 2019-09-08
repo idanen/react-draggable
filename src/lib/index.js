@@ -1,2 +1,1 @@
-import Draggable, { useDraggable } from './Draggable';
-export { Draggable, useDraggable };
+export { Draggable, useDraggable } from './Draggable';

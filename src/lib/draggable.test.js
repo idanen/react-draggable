@@ -2,7 +2,7 @@
 import React from 'react';
 import { expect } from 'chai';
 import { render, cleanup, fireEvent } from '@testing-library/react';
-import Draggable from './Draggable';
+import { useDraggable } from './Draggable';
 
 describe('draggable', () => {
   let utils;
@@ -112,28 +112,35 @@ describe('draggable', () => {
     });
   });
 
-  function setup(props) {
-    const getters = render(
-      <Draggable {...props}>
-        {({ targetRef, handleRef, getTargetProps, delta, dragging }) => (
-          <main
-            className='container'
-            ref={targetRef}
-            data-testid='main'
-            style={{ position: 'fixed', top: '11px', left: '11px' }}
-            {...getTargetProps()}
-          >
-            {dragging && <span>Dragging to:</span>}
-            <output>
-              {delta.x}, {delta.y}
-            </output>
-            <button className='handle' ref={handleRef}>
-              handle
-            </button>
-          </main>
-        )}
-      </Draggable>
+  function Consumer(props) {
+    const {
+      targetRef,
+      handleRef,
+      getTargetProps,
+      delta,
+      dragging
+    } = useDraggable(props);
+    return (
+      <main
+        className='container'
+        ref={targetRef}
+        data-testid='main'
+        style={{ position: 'fixed', top: '11px', left: '11px' }}
+        {...getTargetProps()}
+      >
+        {dragging && <span>Dragging to:</span>}
+        <output>
+          {delta.x}, {delta.y}
+        </output>
+        <button className='handle' ref={handleRef}>
+          handle
+        </button>
+      </main>
     );
+  }
+
+  function setup(props) {
+    const getters = render(<Consumer {...props} />);
 
     function drag({
       start = { clientX: 0, clientY: 0 },

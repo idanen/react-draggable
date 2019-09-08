@@ -9,9 +9,9 @@ A custom hook to make elements draggable.
 
 ## Usage
 
-Simplest usage:
+### Simplest usage:
 
-```
+```javascript
 import { useDraggable } from 'react-draggable';
 
 function MyComponent(props) {
@@ -22,5 +22,26 @@ function MyComponent(props) {
       <h1>You can drag me :)</h1>
     </div>
   );
+}
+```
+
+### Usage in a class component:
+
+```javascript
+import React from 'react';
+import { Draggable } from 'react-draggable';
+
+class MyComponent extends React.Component {
+  render() {
+    return (
+      <Draggable>
+        {({ targetRef }) => (
+          <div ref={targetRef}>
+            <h1>You can drag me :)</h1>
+          </div>
+        )}
+      </Draggable>
+    );
+  }
 }
 ```

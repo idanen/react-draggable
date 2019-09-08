@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
-function Draggable({ children, ...rest }) {
+export function Draggable({ children, ...rest }) {
   return children(useDraggable(rest));
 }
 
@@ -10,8 +10,6 @@ Draggable.propTypes = {
   children: PropTypes.func.isRequired,
   controlStyle: PropTypes.bool
 };
-
-export default Draggable;
 
 export function useDraggable({ controlStyle } = {}) {
   const targetRef = useRef(null);
