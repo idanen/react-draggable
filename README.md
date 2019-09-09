@@ -12,7 +12,7 @@ A custom hook to make elements draggable.
 ### Simplest usage:
 
 ```javascript
-import { useDraggable } from 'react-draggable';
+import { useDraggable } from 'use-draggable';
 
 function MyComponent(props) {
   const { targetRef } = useDraggable({ controlStyle: true });
@@ -29,7 +29,7 @@ function MyComponent(props) {
 
 ```javascript
 import React from 'react';
-import { Draggable } from 'react-draggable';
+import { Draggable } from 'use-draggable';
 
 class MyComponent extends React.Component {
   render() {
