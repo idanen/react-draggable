@@ -1,3 +1,10 @@
+## [1.1.4](https://github.com/idanen/react-draggable/compare/v1.1.3...v1.1.4) (2019-09-09)
+
+
+### Bug Fixes
+
+* **state:** Fix dragging state to be a boolean (not `null`) ([2ba3b9b](https://github.com/idanen/react-draggable/commit/2ba3b9b))
+
 ## [1.1.3](https://github.com/idanen/react-draggable/compare/v1.1.2...v1.1.3) (2019-09-08)
 
 
