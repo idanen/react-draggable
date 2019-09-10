@@ -38,7 +38,7 @@ describe('draggable', () => {
       expect(getByText(`${delta.x}, ${delta.y}`)).to.be.ok;
     });
 
-    it('should return a correct delta position after second drag', () => {
+    it('should return a correct delta position after more drag', () => {
       const startAt = { clientX: 10, clientY: 10 };
       const delta = { x: 5, y: 5 };
       const secondStart = {
@@ -98,6 +98,25 @@ describe('draggable', () => {
         fireEvent.mouseDown(getByText(/handle/i));
 
         expect(getByText(/handle/i).style.cursor).to.equal('grabbing');
+      });
+
+      it('should add `will-change: transform` to target', () => {
+        const { getByText, getByTestId } = utils;
+
+        fireEvent.mouseDown(getByText(/handle/));
+
+        expect(getByTestId('main').style.willChange).to.equal('transform');
+      });
+
+      it('should remove `will-change: transform` from target', () => {
+        const { getByTestId, drag } = utils;
+
+        drag({
+          start: { clientX: 3, clientY: 3 },
+          delta: { x: 10, y: 15 }
+        });
+
+        expect(getByTestId('main').style.willChange).to.equal('');
       });
     });
 

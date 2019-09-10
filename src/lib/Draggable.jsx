@@ -34,6 +34,9 @@ export function useDraggable({ controlStyle } = {}) {
       const source = (event.touches && event.touches[0]) || event;
       const { clientX, clientY } = source;
       initial.current = { x: clientX, y: clientY };
+      if (controlStyle) {
+        targetRef.current.style.willChange = 'transform';
+      }
     }
   }, [controlStyle]);
 
@@ -67,10 +70,14 @@ export function useDraggable({ controlStyle } = {}) {
 
     function stopDragging(event) {
       setDragging(false);
-      reposition(event, true);
+      const newDelta = reposition(event);
+      setPrev(newDelta);
+      if (controlStyle) {
+        targetRef.current.style.willChange = '';
+      }
     }
 
-    function reposition(event, finished) {
+    function reposition(event) {
       const source =
         (event.changedTouches && event.changedTouches[0]) ||
         (event.touches && event.touches[0]) ||
@@ -80,9 +87,7 @@ export function useDraggable({ controlStyle } = {}) {
       const calculatedY = clientY - initial.current.y;
       const newDelta = { x: calculatedX + prev.x, y: calculatedY + prev.y };
       setDelta(newDelta);
-      if (finished) {
-        setPrev(newDelta);
-      }
+      return newDelta;
     }
   }, [dragging, prev, controlStyle]);
 
