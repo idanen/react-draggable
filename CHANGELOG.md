@@ -1,3 +1,10 @@
+## [1.1.5](https://github.com/idanen/react-draggable/compare/v1.1.4...v1.1.5) (2019-09-10)
+
+
+### Bug Fixes
+
+* **Draggable:** Add `will-change` to the target element ([24e4125](https://github.com/idanen/react-draggable/commit/24e4125))
+
 ## [1.1.4](https://github.com/idanen/react-draggable/compare/v1.1.3...v1.1.4) (2019-09-09)
 
 
