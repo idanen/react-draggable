@@ -19,6 +19,7 @@ export function useDraggable({ controlStyle, viewport } = {}) {
   const [prev, setPrev] = useState({ x: 0, y: 0 });
   const [delta, setDelta] = useState({ x: 0, y: 0 });
   const initial = useRef({ x: 0, y: 0 });
+  const viewportLimits = useRef({});
 
   useEffect(() => {
     const handle = handleRef.current || targetRef.current;
@@ -32,6 +33,23 @@ export function useDraggable({ controlStyle, viewport } = {}) {
 
     function startDragging(event) {
       setDragging(true);
+      if (viewport) {
+        const targetRectangle = targetRef.current.getBoundingClientRect();
+        viewportLimits.current = {
+          left: prev.x - targetRectangle.left,
+          top: prev.y - targetRectangle.top,
+          right:
+            document.documentElement.clientWidth -
+            targetRectangle.width -
+            targetRectangle.left +
+            prev.x,
+          bottom:
+            document.documentElement.clientHeight -
+            targetRectangle.height -
+            targetRectangle.top +
+            prev.y
+        };
+      }
       const source = (event.touches && event.touches[0]) || event;
       const { clientX, clientY } = source;
       initial.current = { x: clientX, y: clientY };
@@ -39,7 +57,7 @@ export function useDraggable({ controlStyle, viewport } = {}) {
         targetRef.current.style.willChange = 'transform';
       }
     }
-  }, [controlStyle]);
+  }, [controlStyle, viewport, prev]);
 
   useEffect(() => {
     const handle = handleRef.current || targetRef.current;
@@ -83,17 +101,24 @@ export function useDraggable({ controlStyle, viewport } = {}) {
         (event.changedTouches && event.changedTouches[0]) ||
         (event.touches && event.touches[0]) ||
         event;
-      let { clientX, clientY } = source;
-      
-      if (viewport) {
-        clientX = Math.max(0, Math.min(clientX, document.documentElement.clientWidth));
-        clientY = Math.max(0, Math.min(clientY, document.documentElement.clientHeight));
-      }
+      const { clientX, clientY } = source;
+
       const calculatedX = clientX - initial.current.x;
       const calculatedY = clientY - initial.current.y;
 
-      const newDelta = { x: calculatedX + prev.x, y: calculatedY + prev.y };
-      console.log(newDelta);
+      let newXPosition = calculatedX + prev.x;
+      let newYPosition = calculatedY + prev.y;
+      if (viewport) {
+        newXPosition = Math.max(
+          viewportLimits.current.left,
+          Math.min(newXPosition, viewportLimits.current.right)
+        );
+        newYPosition = Math.max(
+          viewportLimits.current.top,
+          Math.min(newYPosition, viewportLimits.current.bottom)
+        );
+      }
+      const newDelta = { x: newXPosition, y: newYPosition };
       setDelta(newDelta);
       return newDelta;
     }
