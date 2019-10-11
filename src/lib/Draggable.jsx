@@ -12,6 +12,27 @@ Draggable.propTypes = {
   viewport: PropTypes.bool
 };
 
+const getViewportDimensions = () => {
+  // don't assume window in case SSR
+  if (!window) {
+    return {
+      width: document.documentElement.clientWidth,
+      height: document.documentElement.clientHeight
+    };
+  }
+  if (window.screen) {
+    return {
+      width: window.screen.availWidth,
+      height: window.screen.availHeight
+    };
+  }
+
+  return {
+    width: window.innerWidth,
+    height: window.innerHeight
+  };
+};
+
 export function useDraggable({ controlStyle, viewport } = {}) {
   const targetRef = useRef(null);
   const handleRef = useRef(null);
@@ -34,17 +55,18 @@ export function useDraggable({ controlStyle, viewport } = {}) {
     function startDragging(event) {
       setDragging(true);
       if (viewport) {
+        const viewportDimensions = getViewportDimensions();
         const targetRectangle = targetRef.current.getBoundingClientRect();
         viewportLimits.current = {
           left: prev.x - targetRectangle.left,
           top: prev.y - targetRectangle.top,
           right:
-            document.documentElement.clientWidth -
+            viewportDimensions.width -
             targetRectangle.width -
             targetRectangle.left +
             prev.x,
           bottom:
-            document.documentElement.clientHeight -
+            viewportDimensions.height -
             targetRectangle.height -
             targetRectangle.top +
             prev.y
