@@ -4,7 +4,8 @@ import { useDraggable } from './lib';
 
 function App() {
   const { targetRef, handleRef, getTargetProps } = useDraggable({
-    controlStyle: true
+    controlStyle: true,
+    viewport: true
   });
   return (
     <div

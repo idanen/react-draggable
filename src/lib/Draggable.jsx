@@ -8,10 +8,11 @@ export function Draggable({ children, ...rest }) {
 
 Draggable.propTypes = {
   children: PropTypes.func.isRequired,
-  controlStyle: PropTypes.bool
+  controlStyle: PropTypes.bool,
+  viewport: PropTypes.bool
 };
 
-export function useDraggable({ controlStyle } = {}) {
+export function useDraggable({ controlStyle, viewport } = {}) {
   const targetRef = useRef(null);
   const handleRef = useRef(null);
   const [dragging, setDragging] = useState(null);
@@ -82,14 +83,21 @@ export function useDraggable({ controlStyle } = {}) {
         (event.changedTouches && event.changedTouches[0]) ||
         (event.touches && event.touches[0]) ||
         event;
-      const { clientX, clientY } = source;
+      let { clientX, clientY } = source;
+      
+      if (viewport) {
+        clientX = Math.max(0, Math.min(clientX, document.documentElement.clientWidth));
+        clientY = Math.max(0, Math.min(clientY, document.documentElement.clientHeight));
+      }
       const calculatedX = clientX - initial.current.x;
       const calculatedY = clientY - initial.current.y;
+
       const newDelta = { x: calculatedX + prev.x, y: calculatedY + prev.y };
+      console.log(newDelta);
       setDelta(newDelta);
       return newDelta;
     }
-  }, [dragging, prev, controlStyle]);
+  }, [dragging, prev, controlStyle, viewport]);
 
   useEffect(() => {
     if (controlStyle) {
