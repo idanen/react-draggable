@@ -167,21 +167,26 @@ describe('draggable', () => {
       touch = false
     } = {}) {
       if (touch) {
-        fireEvent.touchStart(getters.getByText(/handle/), { touches: [start] });
-        fireEvent.touchMove(getters.getByText(/handle/), {
+        const target = getters.getByText(/handle/);
+        fireEvent.touchStart(target, {
+          touches: [createTouch({ target, ...start })]
+        });
+        fireEvent.touchMove(target, {
           touches: [
-            {
+            createTouch({
+              target,
               clientX: start.clientX + delta.x,
               clientY: start.clientY + delta.y
-            }
+            })
           ]
         });
         fireEvent.touchEnd(getters.getByText(/handle/), {
           changedTouches: [
-            {
+            createTouch({
+              target,
               clientX: start.clientX + delta.x,
               clientY: start.clientY + delta.y
-            }
+            })
           ]
         });
       } else {
@@ -203,3 +208,7 @@ describe('draggable', () => {
     };
   }
 });
+
+function createTouch({ target, ...rest }) {
+  return new Touch({ identifier: Date.now(), target, ...rest });
+}
