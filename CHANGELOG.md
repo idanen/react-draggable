@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/idanen/react-draggable/compare/v1.1.5...v1.2.0) (2019-10-14)
+
+
+### Features
+
+* **tests:** Run tests in a browser ([d1c7cba](https://github.com/idanen/react-draggable/commit/d1c7cba65843d666fd74ed49bbcd6cd1d070b8da)), closes [#3](https://github.com/idanen/react-draggable/issues/3)
+
 ## [1.1.5](https://github.com/idanen/react-draggable/compare/v1.1.4...v1.1.5) (2019-09-10)
 
 
