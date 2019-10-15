@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/idanen/react-draggable/compare/v1.2.0...v1.3.0) (2019-10-15)
+
+
+### Features
+
+* Add `viewport` prop to limit dragging in viewport ([1d39989](https://github.com/idanen/react-draggable/commit/1d3998914f7c840635cd2386d0730118573f3874)), closes [#1](https://github.com/idanen/react-draggable/issues/1)
+
 # [1.2.0](https://github.com/idanen/react-draggable/compare/v1.1.5...v1.2.0) (2019-10-14)
 
 
