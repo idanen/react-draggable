@@ -3,8 +3,9 @@ import { render } from 'react-dom';
 import { useDraggable } from './lib';
 
 function App() {
-  const { targetRef, handleRef, getTargetProps } = useDraggable({
-    controlStyle: true
+  const { targetRef, handleRef, getTargetProps, delta } = useDraggable({
+    controlStyle: true,
+    limitRect: true
   });
   return (
     <div
@@ -20,6 +21,9 @@ function App() {
       ref={targetRef}
       {...getTargetProps()}
     >
+      <span style={{ color: 'white' }}>
+        ({delta.x}, {delta.y})
+      </span>
       <button ref={handleRef}>Grab me</button>
     </div>
   );

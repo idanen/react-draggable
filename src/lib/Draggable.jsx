@@ -8,16 +8,18 @@ export function Draggable({ children, ...rest }) {
 
 Draggable.propTypes = {
   children: PropTypes.func.isRequired,
-  controlStyle: PropTypes.bool
+  controlStyle: PropTypes.bool,
+  viewport: PropTypes.bool
 };
 
-export function useDraggable({ controlStyle } = {}) {
+export function useDraggable({ controlStyle, viewport = false } = {}) {
   const targetRef = useRef(null);
   const handleRef = useRef(null);
   const [dragging, setDragging] = useState(null);
   const [prev, setPrev] = useState({ x: 0, y: 0 });
   const [delta, setDelta] = useState({ x: 0, y: 0 });
   const initial = useRef({ x: 0, y: 0 });
+  const limits = useRef({});
 
   useEffect(() => {
     const handle = handleRef.current || targetRef.current;
@@ -37,8 +39,23 @@ export function useDraggable({ controlStyle } = {}) {
       if (controlStyle) {
         targetRef.current.style.willChange = 'transform';
       }
+      if (viewport) {
+        const {
+          left,
+          top,
+          width,
+          height
+        } = targetRef.current.getBoundingClientRect();
+
+        limits.current = {
+          minX: -left + delta.x,
+          maxX: window.innerWidth - width - left + delta.x,
+          minY: -top + delta.y,
+          maxY: window.innerHeight - height - top + delta.y
+        };
+      }
     }
-  }, [controlStyle]);
+  }, [controlStyle, viewport, delta]);
 
   useEffect(() => {
     const handle = handleRef.current || targetRef.current;
@@ -83,13 +100,15 @@ export function useDraggable({ controlStyle } = {}) {
         (event.touches && event.touches[0]) ||
         event;
       const { clientX, clientY } = source;
-      const calculatedX = clientX - initial.current.x;
-      const calculatedY = clientY - initial.current.y;
-      const newDelta = { x: calculatedX + prev.x, y: calculatedY + prev.y };
+      const x = clientX - initial.current.x + prev.x;
+      const y = clientY - initial.current.y + prev.y;
+
+      const newDelta = calcDelta({ x, y, limits: viewport && limits.current });
       setDelta(newDelta);
+
       return newDelta;
     }
-  }, [dragging, prev, controlStyle]);
+  }, [dragging, prev, controlStyle, viewport]);
 
   useEffect(() => {
     if (controlStyle) {
@@ -102,4 +121,17 @@ export function useDraggable({ controlStyle } = {}) {
   });
 
   return { targetRef, handleRef, getTargetProps, dragging, delta };
+}
+
+function calcDelta({ x, y, limits }) {
+  if (!limits) {
+    return { x, y };
+  }
+
+  const { minX, maxX, minY, maxY } = limits;
+
+  return {
+    x: Math.min(Math.max(x, minX), maxX),
+    y: Math.min(Math.max(y, minY), maxY)
+  };
 }

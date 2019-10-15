@@ -50,7 +50,7 @@
     "requirejs": "^2.3.6",
     "rimraf": "^3.0.0",
     "semantic-release": "^15.13.24",
-    "webpack": "^4.41.1"
+    "webpack": "4.41.0"
   },
   "browserslist": {
     "production": [

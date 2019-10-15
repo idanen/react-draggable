@@ -5,15 +5,14 @@ import { render, cleanup, fireEvent } from '@testing-library/react';
 import { useDraggable } from './Draggable';
 
 describe('draggable', () => {
+  const defaultStyle = { position: 'fixed', top: '11px', left: '11px' };
   let utils;
 
   beforeEach(() => {
     utils = setup();
   });
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('should supply proper props to target', () => {
     expect(utils.container.querySelector('[aria-grabbed]')).not.to.be.ok;
@@ -129,6 +128,87 @@ describe('draggable', () => {
         expect(container.querySelector('[aria-grabbed]')).not.to.be.ok;
       });
     });
+
+    describe('limit in viewport', () => {
+      beforeEach(() => {
+        cleanup();
+        utils = setup({
+          controlStyle: true,
+          viewport: true,
+          style: {
+            ...defaultStyle,
+            width: '180px',
+            left: 'auto',
+            right: '0'
+          }
+        });
+      });
+
+      it('should not change transition beyond given rect', () => {
+        const { drag, getByTestId } = utils;
+        const targetElement = getByTestId('main');
+        const rect = targetElement.getBoundingClientRect();
+        const startAt = { clientX: rect.left + 5, clientY: rect.top + 5 };
+        const delta = { x: 5, y: 5 };
+
+        drag({ start: startAt, delta });
+
+        expect(targetElement.style.transform).to.include(`translate(0px, 5px)`);
+      });
+
+      it('should leave transition as it was before limit', () => {
+        const { getByTestId, beginDrag, move } = utils;
+        const targetElement = getByTestId('main');
+        targetElement.style.right = '50px';
+        const rect = targetElement.getBoundingClientRect();
+
+        const startAt = { clientX: rect.left + 5, clientY: rect.top + 5 };
+        const delta = { x: 5, y: 1 };
+
+        beginDrag(startAt);
+        move({
+          clientX: startAt.clientX + delta.x,
+          clientY: startAt.clientY + delta.y
+        });
+        move({
+          clientX: startAt.clientX + delta.x + 10,
+          clientY: startAt.clientY + delta.y
+        });
+        move({
+          clientX: startAt.clientX + delta.x + 25,
+          clientY: startAt.clientY + delta.y
+        });
+        move({
+          clientX: startAt.clientX + delta.x + 50,
+          clientY: startAt.clientY + delta.y
+        });
+
+        const { left, width } = targetElement.getBoundingClientRect();
+        expect(left).to.equal(window.innerWidth - width);
+      });
+
+      it('should keep limits when dragging more than once', () => {
+        const { drag, getByTestId } = utils;
+        const targetElement = getByTestId('main');
+        targetElement.style.right = '50px';
+        const rect = targetElement.getBoundingClientRect();
+
+        const startAt = { clientX: rect.left + 5, clientY: rect.top + 5 };
+        const delta = { x: 15, y: 1 };
+
+        drag({ start: startAt, delta });
+        drag({
+          start: {
+            clientX: startAt.clientX + delta.x,
+            clientY: startAt.clientY + delta.y
+          },
+          delta: { x: 50, y: 0 }
+        });
+
+        const { left, width } = targetElement.getBoundingClientRect();
+        expect(left).to.equal(window.innerWidth - width);
+      });
+    });
   });
 
   function Consumer(props) {
@@ -139,12 +219,14 @@ describe('draggable', () => {
       delta,
       dragging
     } = useDraggable(props);
+    const { style = defaultStyle } = props;
+
     return (
       <main
         className='container'
         ref={targetRef}
         data-testid='main'
-        style={{ position: 'fixed', top: '11px', left: '11px' }}
+        style={style}
         {...getTargetProps()}
       >
         {dragging && <span>Dragging to:</span>}
@@ -158,7 +240,7 @@ describe('draggable', () => {
     );
   }
 
-  function setup(props) {
+  function setup(props = {}) {
     const getters = render(<Consumer {...props} />);
 
     function drag({
@@ -166,44 +248,70 @@ describe('draggable', () => {
       delta = { x: 0, y: 0 },
       touch = false
     } = {}) {
+      beginDrag(start, touch);
+      move(
+        {
+          clientX: start.clientX + delta.x,
+          clientY: start.clientY + delta.y
+        },
+        touch
+      );
+      endDrag(
+        {
+          clientX: start.clientX + delta.x,
+          clientY: start.clientY + delta.y
+        },
+        touch
+      );
+    }
+
+    function beginDrag(start, touch = false) {
+      const target = getters.getByText(/handle/);
       if (touch) {
-        const target = getters.getByText(/handle/);
         fireEvent.touchStart(target, {
           touches: [createTouch({ target, ...start })]
         });
+      } else {
+        fireEvent.mouseDown(target, start);
+      }
+    }
+
+    function move(to, touch) {
+      const target = getters.getByText(/handle/);
+      if (touch) {
         fireEvent.touchMove(target, {
           touches: [
             createTouch({
               target,
-              clientX: start.clientX + delta.x,
-              clientY: start.clientY + delta.y
-            })
-          ]
-        });
-        fireEvent.touchEnd(getters.getByText(/handle/), {
-          changedTouches: [
-            createTouch({
-              target,
-              clientX: start.clientX + delta.x,
-              clientY: start.clientY + delta.y
+              ...to
             })
           ]
         });
       } else {
-        fireEvent.mouseDown(getters.getByText(/handle/), start);
-        fireEvent.mouseMove(getters.getByText(/handle/), {
-          clientX: start.clientX + delta.x,
-          clientY: start.clientY + delta.y
+        fireEvent.mouseMove(target, to);
+      }
+    }
+
+    function endDrag(end, touch) {
+      const target = getters.getByText(/handle/);
+      if (touch) {
+        fireEvent.touchEnd(getters.getByText(/handle/), {
+          changedTouches: [
+            createTouch({
+              target,
+              ...end
+            })
+          ]
         });
-        fireEvent.mouseUp(getters.getByText(/handle/), {
-          clientX: start.clientX + delta.x,
-          clientY: start.clientY + delta.y
-        });
+      } else {
+        fireEvent.mouseUp(getters.getByText(/handle/), end);
       }
     }
 
     return {
       ...getters,
+      beginDrag,
+      move,
       drag
     };
   }
