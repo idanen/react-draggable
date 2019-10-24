@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/idanen/react-draggable/compare/v1.3.0...v1.4.0) (2019-10-24)
+
+
+### Features
+
+* Support limiting dragging in a given rect ([cc9d2e3](https://github.com/idanen/react-draggable/commit/cc9d2e37c6077b2095ec50955c06e17d6408c6ad)), closes [#4](https://github.com/idanen/react-draggable/issues/4)
+
 # [1.3.0](https://github.com/idanen/react-draggable/compare/v1.2.0...v1.3.0) (2019-10-15)
 
 
