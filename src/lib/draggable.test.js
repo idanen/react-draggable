@@ -209,6 +209,66 @@ describe('draggable', () => {
         expect(left).to.equal(window.innerWidth - width);
       });
     });
+
+    describe('limit in rect', () => {
+      const limits = {
+        left: 11,
+        right: window.innerWidth - 11,
+        top: 5,
+        bottom: window.innerHeight - 13
+      };
+
+      beforeEach(() => {
+        cleanup();
+        utils = setup({
+          controlStyle: true,
+          rectLimits: limits,
+          style: {
+            ...defaultStyle,
+            width: '180px',
+            left: '20px'
+          }
+        });
+      });
+
+      it('should not change transition beyond given rect', () => {
+        const { drag, getByTestId } = utils;
+        const targetElement = getByTestId('main');
+        const rect = targetElement.getBoundingClientRect();
+        const startAt = { clientX: rect.left + 5, clientY: rect.top + 5 };
+        const delta = { x: -50, y: -90 };
+
+        drag({ start: startAt, delta });
+
+        expect(targetElement.getBoundingClientRect()).to.include({
+          left: limits.left,
+          top: limits.top
+        });
+      });
+
+      it('should keep limits when dragging more than once', () => {
+        const { drag, getByTestId } = utils;
+        const targetElement = getByTestId('main');
+        targetElement.style.right = '50px';
+        targetElement.style.left = 'auto';
+        const rect = targetElement.getBoundingClientRect();
+
+        const startAt = { clientX: rect.left + 5, clientY: rect.top + 5 };
+        const delta = { x: 15, y: 1 };
+
+        drag({ start: startAt, delta });
+        drag({
+          start: {
+            clientX: startAt.clientX + delta.x,
+            clientY: startAt.clientY + delta.y
+          },
+          delta: { x: 50, y: 0 }
+        });
+
+        const { left, width } = targetElement.getBoundingClientRect();
+        expect(left).to.equal(limits.right - width);
+      });
+    });
   });
 
   function Consumer(props) {

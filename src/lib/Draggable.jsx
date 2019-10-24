@@ -1,25 +1,35 @@
 /* eslint-disable id-length */
 import { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
+import { func, bool, shape, number } from 'prop-types';
 
 export function Draggable({ children, ...rest }) {
   return children(useDraggable(rest));
 }
 
 Draggable.propTypes = {
-  children: PropTypes.func.isRequired,
-  controlStyle: PropTypes.bool,
-  viewport: PropTypes.bool
+  children: func.isRequired,
+  controlStyle: bool,
+  rectLimits: shape({
+    left: number,
+    right: number,
+    top: number,
+    bottom: number
+  }),
+  viewport: bool
 };
 
-export function useDraggable({ controlStyle, viewport = false } = {}) {
+export function useDraggable({
+  controlStyle,
+  viewport = false,
+  rectLimits
+} = {}) {
   const targetRef = useRef(null);
   const handleRef = useRef(null);
   const [dragging, setDragging] = useState(null);
   const [prev, setPrev] = useState({ x: 0, y: 0 });
   const [delta, setDelta] = useState({ x: 0, y: 0 });
   const initial = useRef({ x: 0, y: 0 });
-  const limits = useRef({});
+  const limits = useRef(null);
 
   useEffect(() => {
     const handle = handleRef.current || targetRef.current;
@@ -39,7 +49,7 @@ export function useDraggable({ controlStyle, viewport = false } = {}) {
       if (controlStyle) {
         targetRef.current.style.willChange = 'transform';
       }
-      if (viewport) {
+      if (viewport || rectLimits) {
         const {
           left,
           top,
@@ -47,15 +57,24 @@ export function useDraggable({ controlStyle, viewport = false } = {}) {
           height
         } = targetRef.current.getBoundingClientRect();
 
-        limits.current = {
-          minX: -left + delta.x,
-          maxX: window.innerWidth - width - left + delta.x,
-          minY: -top + delta.y,
-          maxY: window.innerHeight - height - top + delta.y
-        };
+        if (viewport) {
+          limits.current = {
+            minX: -left + delta.x,
+            maxX: window.innerWidth - width - left + delta.x,
+            minY: -top + delta.y,
+            maxY: window.innerHeight - height - top + delta.y
+          };
+        } else {
+          limits.current = {
+            minX: rectLimits.left - left + delta.x,
+            maxX: rectLimits.right - width - left + delta.x,
+            minY: rectLimits.top - top + delta.y,
+            maxY: rectLimits.bottom - height - top + delta.y
+          };
+        }
       }
     }
-  }, [controlStyle, viewport, delta]);
+  }, [controlStyle, viewport, delta, rectLimits]);
 
   useEffect(() => {
     const handle = handleRef.current || targetRef.current;
@@ -103,12 +122,16 @@ export function useDraggable({ controlStyle, viewport = false } = {}) {
       const x = clientX - initial.current.x + prev.x;
       const y = clientY - initial.current.y + prev.y;
 
-      const newDelta = calcDelta({ x, y, limits: viewport && limits.current });
+      const newDelta = calcDelta({
+        x,
+        y,
+        limits: limits.current
+      });
       setDelta(newDelta);
 
       return newDelta;
     }
-  }, [dragging, prev, controlStyle, viewport]);
+  }, [dragging, prev, controlStyle, viewport, rectLimits]);
 
   useEffect(() => {
     if (controlStyle) {
