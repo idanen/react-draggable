@@ -50,3 +50,7 @@ class MyComponent extends React.Component {
 ## Live demo
 
 https://codesandbox.io/s/use-draggable-demo-tiu3w
+
+## Contribute
+PRs are welcomed!
+Note - when opening a PR, make sure the last commit message abides [commitizen guidelines](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines).
