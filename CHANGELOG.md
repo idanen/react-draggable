@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/idanen/react-draggable/compare/v1.4.1...v1.5.0) (2019-12-02)
+
+
+### Features
+
+* Allow reset of dragging state ([ada3b30](https://github.com/idanen/react-draggable/commit/ada3b30786ef9f3c72672617402c8a364dd13547)), closes [#7](https://github.com/idanen/react-draggable/issues/7)
+
 ## [1.4.1](https://github.com/idanen/react-draggable/compare/v1.4.0...v1.4.1) (2019-11-28)
 
 
