@@ -1,5 +1,5 @@
 /* eslint-disable id-length */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { func, bool, shape, number } from 'prop-types';
 
 export function Draggable({ children, ...rest }) {
@@ -139,11 +139,18 @@ export function useDraggable({
     }
   }, [delta, controlStyle]);
 
-  const getTargetProps = () => ({
-    'aria-grabbed': dragging || null
-  });
+  const getTargetProps = useCallback(
+    () => ({
+      'aria-grabbed': dragging || null
+    }),
+    [dragging]
+  );
 
-  return { targetRef, handleRef, getTargetProps, dragging, delta };
+  const resetState = useCallback(() => {
+    setDelta({ x: 0, y: 0 });
+  }, [setDelta]);
+
+  return { targetRef, handleRef, getTargetProps, dragging, delta, resetState };
 }
 
 function calcDelta({ x, y, limits }) {

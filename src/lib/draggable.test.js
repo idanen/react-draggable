@@ -271,11 +271,28 @@ describe('draggable', () => {
     });
   });
 
+  describe('reset drags', () => {
+    beforeEach(() => {
+      cleanup();
+      utils = setup({ controlStyle: true });
+    });
+
+    it('should start dragging from the original position', () => {
+      const { getByText, getByTestId, drag } = utils;
+      drag({ start: { clientX: 3, clientY: 5 }, delta: { x: 15, y: 20 } });
+      fireEvent.click(getByText(/reset/i));
+      expect(getByTestId('main').style.transform).to.equal(
+        'translate(0px, 0px)'
+      );
+    });
+  });
+
   function Consumer(props) {
     const {
       targetRef,
       handleRef,
       getTargetProps,
+      resetState,
       delta,
       dragging
     } = useDraggable(props);
@@ -296,6 +313,7 @@ describe('draggable', () => {
         <button className='handle' ref={handleRef}>
           handle
         </button>
+        <button onClick={resetState}>reset</button>
       </main>
     );
   }
