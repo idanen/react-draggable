@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/idanen/react-draggable/compare/v1.5.0...v1.5.1) (2019-12-02)
+
+
+### Bug Fixes
+
+* **reset-drag:** `resetState` and then dragging positions wrong ([3aae4a9](https://github.com/idanen/react-draggable/commit/3aae4a92eab7bb07a2fdf639d7273e7812225421))
+
 # [1.5.0](https://github.com/idanen/react-draggable/compare/v1.4.1...v1.5.0) (2019-12-02)
 
 
