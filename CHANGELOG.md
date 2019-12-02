@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/idanen/react-draggable/compare/v1.4.0...v1.4.1) (2019-11-28)
+
+
+### Bug Fixes
+
+* **build:** transpile to all envs ([fa890b8](https://github.com/idanen/react-draggable/commit/fa890b84bd625d8eaba67617834b3b16b3b5c29e))
+
 # [1.4.0](https://github.com/idanen/react-draggable/compare/v1.3.0...v1.4.0) (2019-10-24)
 
 
