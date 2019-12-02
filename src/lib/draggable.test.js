@@ -285,6 +285,18 @@ describe('draggable', () => {
         'translate(0px, 0px)'
       );
     });
+
+    describe('after reset', () => {
+      it('should start dragging from the original position', () => {
+        const { getByText, getByTestId, drag } = utils;
+        drag({ start: { clientX: 3, clientY: 5 }, delta: { x: 15, y: 20 } });
+        fireEvent.click(getByText(/reset/i));
+        drag({ start: { clientX: 3, clientY: 5 }, delta: { x: 15, y: 20 } });
+        expect(getByTestId('main').style.transform).to.equal(
+          'translate(15px, 20px)'
+        );
+      });
+    });
   });
 
   function Consumer(props) {

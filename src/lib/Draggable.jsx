@@ -148,7 +148,8 @@ export function useDraggable({
 
   const resetState = useCallback(() => {
     setDelta({ x: 0, y: 0 });
-  }, [setDelta]);
+    setPrev({ x: 0, y: 0 });
+  }, [setDelta, setPrev]);
 
   return { targetRef, handleRef, getTargetProps, dragging, delta, resetState };
 }
