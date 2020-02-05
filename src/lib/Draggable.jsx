@@ -42,6 +42,7 @@ export function useDraggable({
     };
 
     function startDragging(event) {
+      event.preventDefault();
       setDragging(true);
       const source = (event.touches && event.touches[0]) || event;
       const { clientX, clientY } = source;
@@ -105,6 +106,7 @@ export function useDraggable({
     };
 
     function stopDragging(event) {
+      event.preventDefault();
       setDragging(false);
       const newDelta = reposition(event);
       setPrev(newDelta);
