@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/idanen/react-draggable/compare/v1.5.1...v1.5.2) (2020-02-05)
+
+
+### Bug Fixes
+
+* **selection:** Prevent selections while dragging ([54d1683](https://github.com/idanen/react-draggable/commit/54d168318342056ae40818e5c0640cae5b8a4a79)), closes [#9](https://github.com/idanen/react-draggable/issues/9)
+
 ## [1.5.1](https://github.com/idanen/react-draggable/compare/v1.5.0...v1.5.1) (2019-12-02)
 
 
