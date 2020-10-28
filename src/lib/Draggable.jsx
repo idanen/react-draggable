@@ -6,18 +6,6 @@ export function Draggable({ children, ...rest }) {
   return children(useDraggable(rest));
 }
 
-Draggable.propTypes = {
-  children: func.isRequired,
-  controlStyle: bool,
-  rectLimits: shape({
-    left: number,
-    right: number,
-    top: number,
-    bottom: number
-  }),
-  viewport: bool
-};
-
 export function useDraggable({
   controlStyle,
   viewport = false,
@@ -168,3 +156,19 @@ function calcDelta({ x, y, limits }) {
     y: Math.min(Math.max(y, minY), maxY)
   };
 }
+
+useDraggable.propTypes = {
+  controlStyle: bool,
+  rectLimits: shape({
+    left: number,
+    right: number,
+    top: number,
+    bottom: number
+  }),
+  viewport: bool
+};
+
+Draggable.propTypes = {
+  ...useDraggable.propTypes,
+  children: func.isRequired
+};
