@@ -4,10 +4,6 @@ import isCI from 'is-ci';
 
 export default defineConfig({
   plugins: [react()],
-  build: {
-    outDir: 'dist',
-    lib: { entry: 'src/lib/index.tsx', name: 'use-draggable' },
-  },
   test: {
     setupFiles: ['./tests.setup.ts'],
     css: {

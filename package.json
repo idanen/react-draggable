@@ -1,11 +1,18 @@
 {
   "name": "use-draggable",
   "version": "0.0.0-development",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "type": "module",
   "files": [
     "dist"
   ],
+  "main": "./dist/index.umd.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/idanen/react-draggable.git"
@@ -20,13 +27,13 @@
     "test:ci": "vitest run",
     "eject": "react-scripts eject",
     "prebuild": "rimraf dist",
-    "build": "NODE_ENV=production tsc -b && vite build src/lib",
+    "build": "NODE_ENV=production rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
     "commit": "git-cz",
-    "presemantic-release": "npm test && npm run build",
     "semantic-release": "semantic-release"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@rollup/plugin-typescript": "^12.1.2",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^11.0.1",
@@ -49,6 +56,8 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "rimraf": "^6.0.1",
+    "rollup": "^4.40.0",
+    "rollup-plugin-typescript2": "^0.36.0",
     "semantic-release": "^24.2.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.30.1",
