@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { useDraggable } from './lib';
 
 function App() {
@@ -7,22 +7,30 @@ function App() {
   const bounding = useRef(null);
   const { targetRef, handleRef, getTargetProps, delta } = useDraggable({
     controlStyle: true,
-    rectLimits: rect
+    rectLimits: rect,
   });
 
   useEffect(() => {
-    const {
-      top,
-      left,
-      right,
-      bottom
-    } = bounding.current.getBoundingClientRect();
-    setRect({
-      top,
-      left,
-      right,
-      bottom
+    const observer = new ResizeObserver(() => {
+      const { top, left, width, height } =
+        bounding.current.getBoundingClientRect();
+      setRect({
+        top,
+        left,
+        right: left + width,
+        bottom: top + height,
+      });
     });
+
+    if (!bounding.current) {
+      observer.disconnect();
+      return;
+    }
+
+    observer.observe(bounding.current);
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
   return (
@@ -31,21 +39,23 @@ function App() {
       ref={bounding}
       style={{
         margin: '20px 0 0 20px',
-        padding: '200px',
         height: '80vh',
         width: '75vw',
-        background: 'lavender'
+        background: 'lavender',
+        resize: 'both',
+        overflow: 'auto',
       }}
     >
       <div
         style={{
+          userSelect: 'none',
           display: 'flex',
           justifyContent: 'flex-end',
           alignItems: 'flex-end',
           width: 320,
           height: 180,
           margin: '18px auto',
-          backgroundColor: 'hotpink'
+          backgroundColor: 'hotpink',
         }}
         ref={targetRef}
         {...getTargetProps()}
@@ -59,4 +69,4 @@ function App() {
   );
 }
 
-render(<App />, document.getElementById('root'));
+createRoot(document.getElementById('root')).render(<App />);
