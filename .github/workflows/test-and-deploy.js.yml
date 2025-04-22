@@ -19,6 +19,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Prepare ${{ matrix.node-version }}
+        uses: pnpm/action-setup@v4.1.0
+        with:
+          version: 10.2.1
+      - run: pnpm exec playwright install
+      - uses: actions/checkout@v4
       - name: Setup ${{ matrix.node-version }}
         uses: pnpm/action-setup@v4.1.0
         with:
