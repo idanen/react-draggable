@@ -1,3 +1,13 @@
+# [2.0.0](https://github.com/idanen/react-draggable/compare/v1.5.2...v2.0.0) (2025-04-22)
+
+
+* chore!: Modernize tech stack ([#64](https://github.com/idanen/react-draggable/issues/64)) ([84bbbdd](https://github.com/idanen/react-draggable/commit/84bbbddcab650f63da2ef1cd0013f27d88028ef3))
+
+
+### BREAKING CHANGES
+
+* Not necessarily breaks, but wouldn't want to force install until I make sure it can be used as before
+
 ## [1.5.2](https://github.com/idanen/react-draggable/compare/v1.5.1...v1.5.2) (2020-02-05)
 
 
